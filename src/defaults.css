@@ -1,0 +1,19 @@
+/* CSS file */
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace mx "library://ns.adobe.com/flex/mx";
+@namespace physics "com.flexmojo.physics.*";
+
+physics|PhysicalComponent {
+	friction : 0;
+	restitution : 0;
+	density : 0;
+	fixedRotation : false;
+	
+	fixtureAdapterClass : ClassReference("com.flexmojo.physics.DefaultFixtureAdapter");
+	skinClass : ClassReference("com.flexmojo.physics.PhysicalComponentSkin");
+}
+
+physics|PhysicalComponentSkin {
+	fillColor: #000000;
+	fillAlpha: 0;
+}

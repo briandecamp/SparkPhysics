@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="true" version="3">
+  <includeClasses>
+    <classEntry path="com.flexmojo.physics.DefaultFixtureAdapter"/>
+    <classEntry path="com.flexmojo.physics.IFixtureAdapter"/>
+    <classEntry path="com.flexmojo.physics.Joint"/>
+    <classEntry path="com.flexmojo.physics.JointSkin"/>
+    <classEntry path="com.flexmojo.physics.MouseJointFactory"/>
+    <classEntry path="com.flexmojo.physics.PhysicalComponent"/>
+    <classEntry path="com.flexmojo.physics.PhysicalComponentSkin"/>
+    <classEntry path="com.flexmojo.physics.PhysicsLayout"/>
+    <classEntry path="com.flexmojo.physics.event.FixtureEvent"/>
+    <classEntry path="com.flexmojo.svg.b2Bezier"/>
+    <classEntry path="com.flexmojo.svg.b2SVG"/>
+    <classEntry path="com.flexmojo.physics.CircleFixtureAdapter"/>
+  </includeClasses>
+  <includeResources>
+    <resourceEntry destPath="defaults.css" sourcePath="defaults.css"/>
+  </includeResources>
+  <namespaceManifests/>
+</flexLibProperties>
