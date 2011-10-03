@@ -48,10 +48,10 @@ package com.flexmojo.physics
 		}
 
 		// Map of a component to an ArrayCollection<b2Fixture> for the component
-		private var fixtureSets:Object = {};
+		private var bodyMap:Object = {};
 		
 		private var _acceleration:Number = 9.8;
-		
+
 		public function set acceleration(acc:Number):void {
 			_acceleration = acc;
 			if(_world) {
@@ -130,13 +130,11 @@ package com.flexmojo.physics
 		}
 		
 		private function detach(pc:SkinnableComponent):void {
-			var fixtures:ArrayCollection = fixtureSets[pc];
-			if(fixtures) {
-				for each (var fixture:b2Fixture in fixtures) {
-					world.DestroyBody(fixture.GetBody());
-				}
+			var body:b2Body = bodyMap[pc];
+			if(body) {
+				world.DestroyBody(body);
 
-				delete fixtureSets[pc];
+				delete bodyMap[pc];
 				
 				pc.removeEventListener(ResizeEvent.RESIZE, onResize);
 				pc.removeEventListener(MoveEvent.MOVE, onMove);
@@ -144,17 +142,17 @@ package com.flexmojo.physics
 		}
 		
 		private function affix(pc:SkinnableComponent):void {
-			var fixtures:ArrayCollection = fixtureSets[pc];
-			if(!fixtures) {
+			var body:b2Body = bodyMap[pc];
+			if(!body) {
 				var fixtureClass:Class = pc.getStyle("fixtureAdapterClass");
 				if(fixtureClass) {
 					var adapter:IFixtureAdapter = new fixtureClass();
-					fixtures = adapter.createFixtures(pc, world);
-					fixtureSets[pc] = fixtures;
+					body = adapter.createBody(pc, world);
+					bodyMap[pc] = body;
 					
 					// If we are working with bonefide PhysicalComponent, 
 					// set the fixtures. PhysicalCompnent should probably be an interface here.
-					if(pc is PhysicalComponent) PhysicalComponent(pc).fixtures = fixtures.toArray();
+					if(pc is PhysicalComponent) PhysicalComponent(pc).physicalBody = body;
 					
 					pc.addEventListener(ResizeEvent.RESIZE, onResize);
 					pc.addEventListener(MoveEvent.MOVE, onMove);
@@ -170,8 +168,8 @@ package com.flexmojo.physics
 		protected function onMove(event:Event):void
 		{
 			var pc:SkinnableComponent = event.target as SkinnableComponent;
-			var fix:ArrayCollection = fixtureSets[pc];
-			if(fix && imperturbable(pc)) {
+			var body:b2Body = bodyMap[pc];
+			if(body && imperturbable(pc)) {
 				detach(pc);
 				affix(pc);
 			}
@@ -181,8 +179,8 @@ package com.flexmojo.physics
 		protected function onResize(event:Event):void
 		{
 			var pc:SkinnableComponent = event.target as SkinnableComponent;
-			var fix:ArrayCollection = fixtureSets[pc];
-			if(fix) {
+			var body:b2Body = bodyMap[pc];
+			if(body) {
 				detach(pc);
 				affix(pc);
 			}

@@ -32,15 +32,14 @@ package com.flexmojo.physics
 			return shapes;
 		}
 
-		public function createFixtures(comp:SkinnableComponent, world:b2World):ArrayCollection // of b2Fixture
-		{
-			var fixtures:ArrayCollection = new ArrayCollection();
+		public function createBody(comp:SkinnableComponent, world:b2World):b2Body {
 			var bodyDef:b2BodyDef = createBodyDef(comp);
 			var body:b2Body = world.CreateBody(bodyDef);
-			for each (var fixDef:b2FixtureDef in createFixDefs(comp)) {
-				fixtures.addItem(body.CreateFixture(fixDef));
+			var fixDefs:ArrayCollection = createFixDefs(comp);
+			for each (var fixDef:b2FixtureDef in fixDefs) {
+				body.CreateFixture(fixDef);
 			}
-			return fixtures;
+			return body;
 		}
 		
 		protected function createFixDefs(comp:SkinnableComponent):ArrayCollection {

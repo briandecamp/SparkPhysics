@@ -16,7 +16,8 @@
 	
 	<fx:Script>
 		<![CDATA[
-			public var fixtures:Array; // of b2Fixture
+			import Box2D.Dynamics.b2Body;
+			public var physicalBody:b2Body;
 			
 			public function get imperturbable():Boolean {
 				return getStyle('density') == 0;
