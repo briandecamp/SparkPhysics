@@ -1,4 +1,4 @@
-package com.flexmojo.physics
+package com.flexmojo.physics.adapter
 {
 	import Box2D.Collision.Shapes.b2CircleShape;
 	import Box2D.Common.Math.b2Vec2;
@@ -6,6 +6,7 @@ package com.flexmojo.physics
 	import mx.collections.ArrayCollection;
 	
 	import spark.components.supportClasses.SkinnableComponent;
+	import com.flexmojo.physics.PhysicsLayout;
 
 	public class CirclePhysicsAdapter extends DefaultPhysicsAdapter
 	{

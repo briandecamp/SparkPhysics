@@ -17,6 +17,7 @@ package com.flexmojo.physics
     import spark.components.supportClasses.SkinnableComponent;
     import spark.events.ElementExistenceEvent;
     import spark.layouts.BasicLayout;
+    import com.flexmojo.physics.adapter.IPhysicsAdapter;
     
 	[Event(name="beforeStep", type="flash.events.Event")]
 	[Event(name="afterStep", type="flash.events.Event")]

@@ -8,6 +8,7 @@
 	</fx:Metadata>
 	<fx:Declarations>
 		<s:SolidColor id="debugFill" alpha="{getStyle('fillAlpha')}" color="{getStyle('fillColor')}"/>
+		<s:SolidColorStroke id="debugStroke" alpha="{getStyle('strokeAlpha')}" color="{getStyle('strokeColor')}" weight="{getStyle('strokeWeight')}"/>
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
@@ -18,10 +19,7 @@
 			import Box2D.Dynamics.b2Body;
 			import Box2D.Dynamics.b2Fixture;
 			
-			import mx.graphics.SolidColorStroke;
-			
 			import spark.primitives.Ellipse;
-			import spark.primitives.Line;
 			import spark.primitives.Path;
 			
 			/* Called when the body is changed */
@@ -39,6 +37,7 @@
 						circle.x = (positionMeters.x-radiusMeters) * PhysicsLayout.PPM;
 						circle.y = (positionMeters.y-radiusMeters) * PhysicsLayout.PPM;
 						circle.fill = debugFill;
+						circle.stroke = debugStroke;
 						contentGroup.addElement(circle);
 					} else if(shape is b2PolygonShape) {
 						var polygon:b2PolygonShape = shape as b2PolygonShape;
@@ -53,6 +52,7 @@
 						var path:Path = new Path();
 						path.data = pathData;
 						path.fill = debugFill;
+						path.stroke = debugStroke;
 						contentGroup.addElement(path);
 					}
 				}

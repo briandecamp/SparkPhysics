@@ -1,4 +1,4 @@
-package com.flexmojo.physics
+package com.flexmojo.physics.adapter
 {
 	import Box2D.Collision.Shapes.b2PolygonShape;
 	import Box2D.Collision.Shapes.b2Shape;
@@ -11,6 +11,7 @@ package com.flexmojo.physics
 	import mx.collections.ArrayCollection;
 	
 	import spark.components.supportClasses.SkinnableComponent;
+	import com.flexmojo.physics.PhysicsLayout;
 	
 	public class DefaultPhysicsAdapter implements IPhysicsAdapter
 	{

@@ -1,4 +1,4 @@
-package com.flexmojo.physics
+package com.flexmojo.physics.joint
 {
 	import Box2D.Collision.b2AABB;
 	import Box2D.Common.Math.b2Vec2;
@@ -11,6 +11,8 @@ package com.flexmojo.physics
 	import Box2D.Dynamics.b2Body;
 	import Box2D.Dynamics.b2Fixture;
 	import Box2D.Dynamics.b2World;
+	
+	import com.flexmojo.physics.PhysicsLayout;
 	
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -25,7 +27,7 @@ package com.flexmojo.physics
 	{
 		public var world:b2World;
 		public var maxAcceleration:Number = 980;
-		private var _mouseJoint:b2MouseJoint = null;
+		private var _physicalJoint:b2MouseJoint = null;
 		private var _graphicJoint:Joint = null;
 		private var _target:SkinnableContainer;
 
@@ -54,43 +56,52 @@ package com.flexmojo.physics
 		}
 		
 		public function updateJoint():void {
-			if (_mouseJoint) {
+			if (_physicalJoint) {
 				var p2:b2Vec2 = new b2Vec2(target.mouseX/PhysicsLayout.PPM, target.mouseY/PhysicsLayout.PPM);
-				_mouseJoint.SetTarget(p2);
+				_physicalJoint.SetTarget(p2);
 			}
-			if(_graphicJoint && _mouseJoint) {
-				_graphicJoint.x = _mouseJoint.GetAnchorA().x * PhysicsLayout.PPM;
-				_graphicJoint.y = _mouseJoint.GetAnchorA().y * PhysicsLayout.PPM;
-				_graphicJoint.xTo = (_mouseJoint.GetAnchorB().x - _mouseJoint.GetAnchorA().x) * PhysicsLayout.PPM;
-				_graphicJoint.yTo = (_mouseJoint.GetAnchorB().y -_mouseJoint.GetAnchorA().y) * PhysicsLayout.PPM;
+			if(_graphicJoint && _physicalJoint) {
+				_graphicJoint.x = _physicalJoint.GetAnchorA().x * PhysicsLayout.PPM;
+				_graphicJoint.y = _physicalJoint.GetAnchorA().y * PhysicsLayout.PPM;
+				_graphicJoint.xTo = (_physicalJoint.GetAnchorB().x - _physicalJoint.GetAnchorA().x) * PhysicsLayout.PPM;
+				_graphicJoint.yTo = (_physicalJoint.GetAnchorB().y -_physicalJoint.GetAnchorA().y) * PhysicsLayout.PPM;
 			}
 		}
 		
 		public function createMouseJoint(fixture:b2Fixture):void {
+			destroyJoint();
+			
 			var mouseJointDef:b2MouseJointDef = new b2MouseJointDef();
 			mouseJointDef.bodyA = world.GetGroundBody();
 			mouseJointDef.bodyB = fixture.GetBody();
 			mouseJointDef.target.Set(target.mouseX/PhysicsLayout.PPM, target.mouseY/PhysicsLayout.PPM);
 			mouseJointDef.maxForce = maxAcceleration * fixture.GetBody().GetMass();
 			
-			_mouseJoint = world.CreateJoint(mouseJointDef) as b2MouseJoint;
+			_physicalJoint = world.CreateJoint(mouseJointDef) as b2MouseJoint;
 			fixture.GetBody().SetAwake(true);
 			
 			_graphicJoint = new Joint();
 			target.addElementAt(_graphicJoint, 0);
 		}
 		
-		private function mouseUpHandler(mouseEvent:MouseEvent):void {
-			if(_graphicJoint && target) {
+		private function destroyJoint():void {
+			var destroyedJoint:Boolean = false;
+			if (_physicalJoint != null && world != null) {
+				world.DestroyJoint(_physicalJoint);
+				_physicalJoint = null;
+				destroyedJoint = true;
+			}
+			if(_graphicJoint != null && target != null) {
 				target.removeElement(_graphicJoint);
 				_graphicJoint = null;
 			}
-			if (_mouseJoint && world) {
-				world.DestroyJoint(_mouseJoint);
-				_mouseJoint = null;
-				
+			if(destroyedJoint) {
 				dispatchEvent(new Event('jointDestroyed'));
 			}
+		}
+		
+		private function mouseUpHandler(mouseEvent:MouseEvent):void {
+			destroyJoint();
 		}
 	}
 }

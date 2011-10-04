@@ -9,17 +9,21 @@ physics|PhysicalComponent {
 	density : 0;
 	fixedRotation : false;
 	
-	physicsAdapterClass : ClassReference("com.flexmojo.physics.DefaultPhysicsAdapter");
+	physicsAdapterClass : ClassReference("com.flexmojo.physics.adapter.DefaultPhysicsAdapter");
 	skinClass : ClassReference("com.flexmojo.physics.PhysicalComponentSkin");
 }
 
 physics|PhysicalComponentSkin {
 	fillColor: #000000;
 	fillAlpha: 0;
+	
+	strokeColor: #000000;
+	strokeAlpha: 1;
+	strokeWeight: 2;
 }
 
 physics|Joint {
-	stroke-weight: 1;
-	stroke-alpha: 1;
-	stroke-color: #000000;
+	strokeWeight: 1;
+	strokeAlpha: 1;
+	strokeColor: #000000;
 }

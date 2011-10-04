@@ -3,7 +3,7 @@
 		xmlns:s="library://ns.adobe.com/flex/spark" 
 		xmlns:mx="library://ns.adobe.com/flex/mx">
 	<fx:Metadata>
-		[HostComponent("com.flexmojo.physics.Joint")]
+		[HostComponent("com.flexmojo.physics.joint.Joint")]
 	</fx:Metadata>
 	<s:Line xFrom="0" yFrom="0" xTo="{hostComponent.xTo}" yTo="{hostComponent.yTo}">
 		<s:stroke>

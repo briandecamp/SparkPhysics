@@ -1,4 +1,4 @@
-package com.flexmojo.physics
+package com.flexmojo.physics.adapter
 {
 	import Box2D.Dynamics.b2Body;
 	import Box2D.Dynamics.b2World;
