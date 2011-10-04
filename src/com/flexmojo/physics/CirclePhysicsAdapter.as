@@ -7,7 +7,7 @@ package com.flexmojo.physics
 	
 	import spark.components.supportClasses.SkinnableComponent;
 
-	public class CircleFixtureAdapter extends DefaultFixtureAdapter
+	public class CirclePhysicsAdapter extends DefaultPhysicsAdapter
 	{
 		override protected function createShapes(comp:SkinnableComponent):ArrayCollection {
 			var shapes:ArrayCollection = new ArrayCollection();

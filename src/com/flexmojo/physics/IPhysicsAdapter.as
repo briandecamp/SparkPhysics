@@ -5,7 +5,7 @@ package com.flexmojo.physics
 	
 	import spark.components.supportClasses.SkinnableComponent;
 
-	public interface IFixtureAdapter
+	public interface IPhysicsAdapter
 	{
 		function createBody(comp:SkinnableComponent, world:b2World):b2Body;
 	}

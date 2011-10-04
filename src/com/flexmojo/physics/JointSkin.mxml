@@ -4,11 +4,8 @@
 		xmlns:mx="library://ns.adobe.com/flex/mx">
 	<fx:Metadata>
 		[HostComponent("com.flexmojo.physics.Joint")]
-		[Style(name="strokeAlpha", type="Number", inherit="yes")]
-		[Style(name="strokeWeight", type="Number", inherit="yes")]
-		[Style(name="strokeColor", type="Number", format="Color", inherit="yes")]
 	</fx:Metadata>
-	<s:Line xFrom="{hostComponent.x}" yFrom="{hostComponent.y}" xTo="{hostComponent.xTo}" yTo="{hostComponent.yTo}">
+	<s:Line xFrom="0" yFrom="0" xTo="{hostComponent.xTo}" yTo="{hostComponent.yTo}">
 		<s:stroke>
 			<s:SolidColorStroke weight="{getStyle('strokeWeight')}" alpha="{getStyle('strokeAlpha')}" color="{getStyle('strokeColor')}"/>
 		</s:stroke>

@@ -1,25 +1,15 @@
 package com.flexmojo.physics
 {
-    import Box2D.Collision.Shapes.b2CircleShape;
-    import Box2D.Collision.Shapes.b2PolygonShape;
-    import Box2D.Collision.Shapes.b2Shape;
-    import Box2D.Common.Math.b2Math;
     import Box2D.Common.Math.b2Vec2;
-    import Box2D.Dynamics.Joints.b2DistanceJoint;
-    import Box2D.Dynamics.Joints.b2Joint;
-    import Box2D.Dynamics.Joints.b2MouseJoint;
-    import Box2D.Dynamics.Joints.b2PulleyJoint;
     import Box2D.Dynamics.b2Body;
     import Box2D.Dynamics.b2Fixture;
     import Box2D.Dynamics.b2World;
     
     import com.flexmojo.physics.event.FixtureEvent;
     
-    import flash.display.Graphics;
     import flash.events.Event;
     import flash.events.MouseEvent;
     
-    import mx.collections.ArrayCollection;
     import mx.events.MoveEvent;
     import mx.events.ResizeEvent;
     
@@ -144,15 +134,20 @@ package com.flexmojo.physics
 		private function affix(pc:SkinnableComponent):void {
 			var body:b2Body = bodyMap[pc];
 			if(!body) {
-				var fixtureClass:Class = pc.getStyle("fixtureAdapterClass");
-				if(fixtureClass) {
-					var adapter:IFixtureAdapter = new fixtureClass();
+				var physicsAdapterClass:Class = pc.getStyle("physicsAdapterClass");
+				if(physicsAdapterClass) {
+					var adapter:IPhysicsAdapter = new physicsAdapterClass();
 					body = adapter.createBody(pc, world);
 					bodyMap[pc] = body;
 					
 					// If we are working with bonefide PhysicalComponent, 
-					// set the fixtures. PhysicalCompnent should probably be an interface here.
+					// set the physicalBody. PhysicalCompnent should probably be an interface here.
 					if(pc is PhysicalComponent) PhysicalComponent(pc).physicalBody = body;
+
+					// Redraw the DebugSkin if necessary
+					if(pc.skin is PhysicalComponentSkin) {
+						PhysicalComponentSkin(pc.skin).drawPhysics(body);
+					}
 					
 					pc.addEventListener(ResizeEvent.RESIZE, onResize);
 					pc.addEventListener(MoveEvent.MOVE, onMove);
@@ -235,16 +230,9 @@ package com.flexmojo.physics
 
 		override public function updateDisplayList(width:Number, height:Number):void {
 			super.updateDisplayList(width, height);
-            target.graphics.clear();
             if(!_world) return;
 			
-            // DEBUG
-            for (var nextJoint:b2Joint = world.GetJointList(); nextJoint; nextJoint = nextJoint.GetNext()) {
-//                drawJoint(nextJoint);
-            }
             for (var nextBody:b2Body = world.GetBodyList(); nextBody; nextBody = nextBody.GetNext()) {
-                // DEBUG
-//                drawShapes(nextBody);
                 var pc:SkinnableComponent = nextBody.GetUserData() as SkinnableComponent;
                 if(!pc) continue;
 				
@@ -254,111 +242,6 @@ package com.flexmojo.physics
 					pc.rotation = nextBody.GetAngle() * (180/Math.PI);
 				}
             }
-        }
-        
-		private function drawJoint(joint:b2Joint):void {
-			var body1:b2Body = joint.GetBodyA();
-			var body2:b2Body = joint.GetBodyB();
-			
-			var body1Position:b2Vec2 = body1.GetPosition();
-			var body2Position:b2Vec2 = body2.GetPosition();
-			
-			var body1Anchor:b2Vec2 = joint.GetAnchorA();
-			var body2Anchor:b2Vec2 = joint.GetAnchorB();
-			
-			var containerGraphics:Graphics = target.graphics;
-			
-			containerGraphics.lineStyle(1, 0x501DFF, 1);
-			
-			if(joint is b2DistanceJoint || joint is b2MouseJoint) {
-				containerGraphics.moveTo(body1Anchor.x * PPM, body1Anchor.y * PPM);
-				containerGraphics.lineTo(body2Anchor.x * PPM, body2Anchor.y * PPM);
-			} else if(joint is b2PulleyJoint) {
-				var pulley:b2PulleyJoint = joint as b2PulleyJoint;
-				var s1:b2Vec2 = pulley.GetGroundAnchorA();
-				var s2:b2Vec2 = pulley.GetGroundAnchorB();
-				containerGraphics.moveTo(s1.x * PPM, s1.y * PPM);
-				containerGraphics.lineTo(body1Anchor.x * PPM, body1Anchor.y * PPM);
-				containerGraphics.moveTo(s2.x * PPM, s2.y * PPM);
-				containerGraphics.lineTo(body2Anchor.x * PPM, body2Anchor.y * PPM);
-			} else {
-				if (body1 == world.GetGroundBody()) {
-					containerGraphics.moveTo(body1Anchor.x * PPM, body1Anchor.y * PPM);
-					containerGraphics.lineTo(body2Position.x * PPM, body2Position.y * PPM);
-				} else if (body2 == world.GetGroundBody()) {
-					containerGraphics.moveTo(body1Anchor.x * PPM, body1Anchor.y * PPM);
-					containerGraphics.lineTo(body1Position.x * PPM, body1Position.y * PPM);
-				} else {
-					containerGraphics.moveTo(body1Position.x * PPM, body1Position.y * PPM);
-					containerGraphics.lineTo(body1Anchor.x * PPM, body1Anchor.y * PPM);
-					containerGraphics.lineTo(body2Position.x * PPM, body2Position.y * PPM);
-					containerGraphics.lineTo(body2Anchor.x * PPM, body2Anchor.y * PPM);
-				}
-			}
-		}
-        
-		/**
-		 * DEBUG
- 		 */
-        private function drawShapes(body:b2Body):void {
-            var v:b2Vec2 = null;
-            var containerGraphics:Graphics = target.graphics;
-            containerGraphics.lineStyle(1);
-			var fixture:b2Fixture = body.GetFixtureList();
-			while(fixture) {
-				var shape:b2Shape = fixture.GetShape();
-				if(shape is b2CircleShape) {
-					var circleShape:b2CircleShape = shape as b2CircleShape;
-					
-					var pos:b2Vec2 = body.GetPosition();
-					v = b2Math.AddVV(pos, circleShape.GetLocalPosition());
-					var radius:Number = circleShape.GetRadius();
-					containerGraphics.drawCircle(v.x * PPM, v.y * PPM, radius * PPM);
-					
-					var fromX:int = v.x * PPM;
-					var fromY:int = v.y * PPM;
-					var toX:int = (v.x-radius)*PPM;
-					var toY:int = (v.y-radius)*PPM;
-					trace('draw ' + fromX + ':' + fromY + ' to ' + toX + ':' + toY);
-					containerGraphics.moveTo(v.x*PPM, v.y*PPM);
-					containerGraphics.lineTo((v.x-radius)*PPM, (v.y-radius)*PPM);
-				} else if(shape is b2PolygonShape) {
-					//var poly:b2PolyShape = shape as b2PolyShape;
-					var polyShape:b2PolygonShape = shape as b2PolygonShape;
-					var startVertex:b2Vec2 = null;
-					for each (var vertex:b2Vec2 in polyShape.GetVertices()) {
-						if(startVertex) {
-							containerGraphics.lineTo(vertex.x * PPM, vertex.y * PPM);
-						} else {
-							containerGraphics.moveTo(vertex.x * PPM, vertex.y * PPM);
-						}
-					}
-					// close the loop
-					if(startVertex) containerGraphics.lineTo(startVertex.x * PPM, startVertex.y * PPM);
-						
-					/*
-					var tV:b2Vec2 = b2Math.AddVV(body.GetPosition(),
-					b2Math.b2MulMV(body.GetXForm().R, polyShape.GetVertices()[0]));
-					
-					containerGraphics.moveTo(tV.x * PPM, tV.y * PPM);
-					
-					for (var j:int = 0; j < polyShape.GetVertexCount(); ++j) {
-					v = b2Math.AddVV(body.GetPosition(),
-					b2Math.b2MulMV(body.GetXForm().R, polyShape.GetVertices()[j]));
-					containerGraphics.lineTo(v.x * PPM, v.y * PPM);
-					}
-					containerGraphics.lineTo(tV.x * PPM, tV.y * PPM);
-					v = polyShape.GetVertices()[0];
-					pos = body.GetPosition();
-					containerGraphics.moveTo((pos.x + v.x) * PPM, (pos.y + v.y) * PPM);
-					for (var j:int = 1; j < polyShape.GetVertexCount(); ++j) {
-					v = polyShape.GetVertices()[j];
-					containerGraphics.lineTo((pos.x + v.x) * PPM, (pos.y + v.y) * PPM);
-					}
-					*/
-				}
-				fixture = fixture.GetNext();
-			}
         }
     }
 }

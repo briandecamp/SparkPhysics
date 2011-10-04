@@ -3,20 +3,18 @@
 					  xmlns:s="library://ns.adobe.com/flex/spark" 
 					  xmlns:Dynamics="Box2D.Dynamics.*"
 					  xmlns:mx="library://ns.adobe.com/flex/mx">
-	<fx:Declarations>
-		<!-- Place non-visual elements (e.g., services, value objects) here -->
-	</fx:Declarations>
 	<fx:Metadata>
 		[Style(name="density",type="Number",inherit="yes")]
 		[Style(name="friction",type="Number",inherit="yes")]
 		[Style(name="restitution",type="Number",inherit="yes")]
 		[Style(name="fixedRotation",type="Boolean",inherit="yes")]
-		[Style(name="fixtureAdapterClass",type="Class",inherit="yes")]
+		[Style(name="physicsAdapterClass",type="Class",inherit="yes")]
 	</fx:Metadata>
 	
 	<fx:Script>
 		<![CDATA[
 			import Box2D.Dynamics.b2Body;
+			
 			public var physicalBody:b2Body;
 			
 			public function get imperturbable():Boolean {

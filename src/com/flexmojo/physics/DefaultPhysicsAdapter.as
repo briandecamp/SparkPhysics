@@ -12,7 +12,7 @@ package com.flexmojo.physics
 	
 	import spark.components.supportClasses.SkinnableComponent;
 	
-	public class DefaultFixtureAdapter implements IFixtureAdapter
+	public class DefaultPhysicsAdapter implements IPhysicsAdapter
 	{
 		/**
 		 * Subclasses probably want to override this method. This is the trickiest part of

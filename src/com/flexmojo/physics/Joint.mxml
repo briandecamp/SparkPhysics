@@ -7,4 +7,9 @@
 		<fx:Number id="xTo"/>
 		<fx:Number id="yTo"/>
 	</fx:Declarations>
+	<fx:Metadata>
+		[Style(name="strokeAlpha", type="Number", inherit="yes")]
+		[Style(name="strokeWeight", type="Number", inherit="yes")]
+		[Style(name="strokeColor", type="Number", format="Color", inherit="yes")]
+	</fx:Metadata>
 </s:SkinnableComponent>
