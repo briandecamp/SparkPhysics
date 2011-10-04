@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("spark.components.supportClasses.SkinnableComponent")]
+	</fx:Metadata>
+	<fx:Declarations>
+		<s:SolidColor id="debugFill" alpha="{getStyle('fillAlpha')}" color="{getStyle('fillColor')}"/>
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import Box2D.Collision.Shapes.b2CircleShape;
+			import Box2D.Collision.Shapes.b2PolygonShape;
+			import Box2D.Collision.Shapes.b2Shape;
+			import Box2D.Common.Math.b2Vec2;
+			import Box2D.Dynamics.b2Body;
+			import Box2D.Dynamics.b2Fixture;
+			
+			import mx.graphics.SolidColorStroke;
+			
+			import spark.primitives.Ellipse;
+			import spark.primitives.Line;
+			import spark.primitives.Path;
+			
+			/* Called when the body is changed */
+			internal function drawPhysics(body:b2Body):void {
+				contentGroup.removeAllElements();
+				
+				for(var fixture:b2Fixture = body.GetFixtureList(); fixture; fixture = fixture.GetNext()) {
+					var shape:b2Shape = fixture.GetShape();
+					if(shape is b2CircleShape) {
+						var circleShape:b2CircleShape = shape as b2CircleShape;
+						var radiusMeters:Number = circleShape.GetRadius();
+						var positionMeters:b2Vec2 = circleShape.GetLocalPosition();
+						var circle:Ellipse = new Ellipse();
+						circle.height = circle.width = 2* radiusMeters * PhysicsLayout.PPM;
+						circle.x = (positionMeters.x-radiusMeters) * PhysicsLayout.PPM;
+						circle.y = (positionMeters.y-radiusMeters) * PhysicsLayout.PPM;
+						circle.fill = debugFill;
+						contentGroup.addElement(circle);
+					} else if(shape is b2PolygonShape) {
+						var polygon:b2PolygonShape = shape as b2PolygonShape;
+						var pathSeparator:String = "M ";
+						var pathData:String = "";
+						for(var i:int = 0; i < polygon.GetVertexCount(); i++) {
+							var vertex:b2Vec2 = polygon.GetVertices()[i];
+							pathData += pathSeparator + Math.round(vertex.x * PhysicsLayout.PPM) + " " + Math.round(vertex.y * PhysicsLayout.PPM);
+							pathSeparator = " L ";
+						}
+						pathData += " Z";
+						var path:Path = new Path();
+						path.data = pathData;
+						path.fill = debugFill;
+						contentGroup.addElement(path);
+					}
+				}
+			}
+		]]>
+	</fx:Script>
+	<s:Group id="contentGroup" left="0" right="0" top="0" bottom="0" minWidth="0" minHeight="0"/>
+</s:Skin>
