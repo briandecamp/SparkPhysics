@@ -19,7 +19,7 @@ physics|PhysicalComponentSkin {
 	
 	strokeColor: #000000;
 	strokeAlpha: 1;
-	strokeWeight: 2;
+	strokeWeight: 1;
 }
 
 physics|Joint {
