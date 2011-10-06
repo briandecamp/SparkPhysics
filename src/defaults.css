@@ -2,6 +2,7 @@
 @namespace s "library://ns.adobe.com/flex/spark";
 @namespace mx "library://ns.adobe.com/flex/mx";
 @namespace physics "com.flexmojo.physics.*";
+@namespace joint "com.flexmojo.physics.joint.*";
 
 physics|PhysicalComponent {
 	friction : 0;
@@ -22,7 +23,8 @@ physics|PhysicalComponentSkin {
 	strokeWeight: 1;
 }
 
-physics|Joint {
+joint|Joint {
+	skinClass: ClassReference("com.flexmojo.physics.joint.JointSkin");
 	strokeWeight: 1;
 	strokeAlpha: 1;
 	strokeColor: #000000;

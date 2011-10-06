@@ -202,7 +202,7 @@ package com.flexmojo.physics
          * Applies physics to the actual container children for each frame.
          */
         private function onEnterFrame(event:Event):void {
-			if(world && physicsEnabled) {
+			if(world && physicsEnabled && target && target.initialized) {
 				dispatchEvent(new Event("beforeStep"));
 				world.Step(TIMESTEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
 				world.ClearForces();

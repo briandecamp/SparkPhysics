@@ -15,6 +15,7 @@ package com.flexmojo.physics.joint
 	import com.flexmojo.physics.PhysicsLayout;
 	
 	import flash.events.Event;
+	import flash.events.EventDispatcher;
 	import flash.events.MouseEvent;
 	
 	import mx.events.FlexEvent;
@@ -23,38 +24,14 @@ package com.flexmojo.physics.joint
 	import spark.components.SkinnableContainer;
 
 	[Event(name="jointDestroyed", type="flash.events.Event")]
-	public class MouseJointFactory
+	public class MouseJointFactory extends EventDispatcher
 	{
 		public var world:b2World;
 		public var maxAcceleration:Number = 980;
 		private var _physicalJoint:b2MouseJoint = null;
 		private var _graphicJoint:Joint = null;
-		private var _target:SkinnableContainer;
+		public var target:SkinnableContainer;
 
-		[Bindable]
-		public function get target():SkinnableContainer {
-			return _target;
-		}
-		
-		public function set target(t:SkinnableContainer):void {
-			if(_target) {
-				_target.contentGroup.removeEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
-			}
-			_target = t;
-			if(_target) {
-				// We can only start listening after initialization
-				if(_target.initialized) {
-					_target.contentGroup.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
-				} else {
-					_target.addEventListener(FlexEvent.INITIALIZE, onTargetInitialization);
-				}
-			}
-		}
-		
-		private function onTargetInitialization(event:Event):void {
-			_target.contentGroup.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
-		}
-		
 		public function updateJoint():void {
 			if (_physicalJoint) {
 				var p2:b2Vec2 = new b2Vec2(target.mouseX/PhysicsLayout.PPM, target.mouseY/PhysicsLayout.PPM);
@@ -82,6 +59,9 @@ package com.flexmojo.physics.joint
 			
 			_graphicJoint = new Joint();
 			target.addElementAt(_graphicJoint, 0);
+			
+			// Listen for the release
+			target.parentApplication.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
 		}
 		
 		private function destroyJoint():void {
@@ -89,6 +69,7 @@ package com.flexmojo.physics.joint
 			if (_physicalJoint != null && world != null) {
 				world.DestroyJoint(_physicalJoint);
 				_physicalJoint = null;
+				target.parentApplication.removeEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
 				destroyedJoint = true;
 			}
 			if(_graphicJoint != null && target != null) {
