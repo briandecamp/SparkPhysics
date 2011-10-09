@@ -60,7 +60,7 @@ package com.flexmojo.physics
 		 * Accessor that starts/stop the physics world.
 		 * Manage all possible race/startup conditions for setting target and physicsEnabled
 		 */
-		private var _physicsEnabled:Boolean = false;
+		private var _physicsEnabled:Boolean = true;
 		
 		[Bindable]
 		public function get physicsEnabled():Boolean {
