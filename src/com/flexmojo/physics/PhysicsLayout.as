@@ -5,6 +5,7 @@ package com.flexmojo.physics
     import Box2D.Dynamics.b2Fixture;
     import Box2D.Dynamics.b2World;
     
+    import com.flexmojo.physics.adapter.IPhysicsAdapter;
     import com.flexmojo.physics.event.FixtureEvent;
     
     import flash.events.Event;
@@ -17,20 +18,21 @@ package com.flexmojo.physics
     import spark.components.supportClasses.SkinnableComponent;
     import spark.events.ElementExistenceEvent;
     import spark.layouts.BasicLayout;
-    import com.flexmojo.physics.adapter.IPhysicsAdapter;
     
 	[Event(name="beforeStep", type="flash.events.Event")]
 	[Event(name="afterStep", type="flash.events.Event")]
 	[Event(name="fixtureSelected", type="com.flexmojo.physics.event.FixtureEvent")]
     public class PhysicsLayout extends BasicLayout
     {
-		public static const VELOCITY_ITERATIONS:int = 10;
-		public static const POSITION_ITERATIONS:int = 10;
-		public static const TIMESTEP:Number = 1/60;
-		public static const PPM:Number = 100; // pixels per meter
 		public static const BEFORE_STEP:String = "beforeStep";
 		public static const AFTER_STEP:String = "afterStep";
 
+		public static var PPM:Number = 100; // pixels per meter
+
+		public var velocityIterations:int = 10;
+		public var positionIterations:int = 10;
+		public var timestep:Number = 1/60;
+		
 		private var _world:b2World;
 		
 		[Bindable(event="worldChanged")]
@@ -56,20 +58,8 @@ package com.flexmojo.physics
 			return _acceleration;
 		}
 		
-		/**
-		 * Accessor that starts/stop the physics world.
-		 * Manage all possible race/startup conditions for setting target and physicsEnabled
-		 */
-		private var _physicsEnabled:Boolean = true;
-		
 		[Bindable]
-		public function get physicsEnabled():Boolean {
-			return _physicsEnabled;
-		}
-		
-		public function set physicsEnabled(value:Boolean):void {
-			_physicsEnabled = value;
-		}
+		public var physicsEnabled:Boolean = true;
 		
 		public function destroyWorld():void {
 			if(_world) {
@@ -117,7 +107,7 @@ package com.flexmojo.physics
 		}        
 
 		private function imperturbable(pc:SkinnableComponent):Boolean {
-			return pc.getStyle("density") == 0;
+			return pc.getStyle("staticBody") == true;
 		}
 		
 		private function detach(pc:SkinnableComponent):void {
@@ -142,8 +132,8 @@ package com.flexmojo.physics
 					bodyMap[pc] = body;
 					
 					// If we are working with bonefide PhysicalComponent, 
-					// set the physicalBody. PhysicalCompnent should probably be an interface here.
-					if(pc is PhysicalComponent) PhysicalComponent(pc).physicalBody = body;
+					// set the physicalBody. PhysicalComponent should probably be an interface here.
+					if(pc is IPhysicalComponent) IPhysicalComponent(pc).physicalBody = body;
 
 					// Redraw the DebugSkin if necessary
 					if(pc.skin is PhysicalComponentSkin) {
@@ -204,7 +194,7 @@ package com.flexmojo.physics
         private function onEnterFrame(event:Event):void {
 			if(world && physicsEnabled && target && target.initialized) {
 				dispatchEvent(new Event("beforeStep"));
-				world.Step(TIMESTEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
+				world.Step(timestep, velocityIterations, positionIterations);
 				world.ClearForces();
 				target.invalidateDisplayList();
 				dispatchEvent(new Event("afterStep"));

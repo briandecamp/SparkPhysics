@@ -11,6 +11,7 @@
     <classEntry path="com.flexmojo.physics.event.FixtureEvent"/>
     <classEntry path="com.flexmojo.svg.b2SVG"/>
     <classEntry path="com.flexmojo.physics.adapter.CirclePhysicsAdapter"/>
+    <classEntry path="com.flexmojo.physics.IPhysicalComponent"/>
   </includeClasses>
   <includeResources>
     <resourceEntry destPath="defaults.css" sourcePath="defaults.css"/>

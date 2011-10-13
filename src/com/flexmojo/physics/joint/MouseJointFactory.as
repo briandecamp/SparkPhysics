@@ -1,14 +1,8 @@
 package com.flexmojo.physics.joint
 {
-	import Box2D.Collision.b2AABB;
 	import Box2D.Common.Math.b2Vec2;
-	import Box2D.Dynamics.Joints.b2DistanceJoint;
-	import Box2D.Dynamics.Joints.b2DistanceJointDef;
-	import Box2D.Dynamics.Joints.b2Joint;
-	import Box2D.Dynamics.Joints.b2JointEdge;
 	import Box2D.Dynamics.Joints.b2MouseJoint;
 	import Box2D.Dynamics.Joints.b2MouseJointDef;
-	import Box2D.Dynamics.b2Body;
 	import Box2D.Dynamics.b2Fixture;
 	import Box2D.Dynamics.b2World;
 	
@@ -18,33 +12,17 @@ package com.flexmojo.physics.joint
 	import flash.events.EventDispatcher;
 	import flash.events.MouseEvent;
 	
-	import mx.events.FlexEvent;
-	
-	import spark.components.Group;
 	import spark.components.SkinnableContainer;
 
 	[Event(name="jointDestroyed", type="flash.events.Event")]
 	public class MouseJointFactory extends EventDispatcher
 	{
-		public var world:b2World;
 		public var maxAcceleration:Number = 980;
-		private var _physicalJoint:b2MouseJoint = null;
-		private var _graphicJoint:Joint = null;
 		public var target:SkinnableContainer;
 
-		public function updateJoint():void {
-			if (_physicalJoint) {
-				var p2:b2Vec2 = new b2Vec2(target.mouseX/PhysicsLayout.PPM, target.mouseY/PhysicsLayout.PPM);
-				_physicalJoint.SetTarget(p2);
-			}
-			if(_graphicJoint && _physicalJoint) {
-				_graphicJoint.x = _physicalJoint.GetAnchorA().x * PhysicsLayout.PPM;
-				_graphicJoint.y = _physicalJoint.GetAnchorA().y * PhysicsLayout.PPM;
-				_graphicJoint.xTo = (_physicalJoint.GetAnchorB().x - _physicalJoint.GetAnchorA().x) * PhysicsLayout.PPM;
-				_graphicJoint.yTo = (_physicalJoint.GetAnchorB().y -_physicalJoint.GetAnchorA().y) * PhysicsLayout.PPM;
-			}
-		}
-		
+		private var _physicalJoint:b2MouseJoint = null;
+		private var _graphicJoint:Joint = null;
+
 		public function createMouseJoint(fixture:b2Fixture):void {
 			destroyJoint();
 			
@@ -62,6 +40,24 @@ package com.flexmojo.physics.joint
 			
 			// Listen for the release
 			target.parentApplication.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
+			(target.layout as PhysicsLayout).addEventListener(PhysicsLayout.AFTER_STEP, afterStepHandler);
+		}
+		
+		private function get world():b2World {
+			return (target.layout as PhysicsLayout).world;
+		}
+		
+		private function afterStepHandler(event:Event):void {
+			if (_physicalJoint) {
+				var p2:b2Vec2 = new b2Vec2(target.mouseX/PhysicsLayout.PPM, target.mouseY/PhysicsLayout.PPM);
+				_physicalJoint.SetTarget(p2);
+			}
+			if(_graphicJoint && _physicalJoint) {
+				_graphicJoint.x = _physicalJoint.GetAnchorA().x * PhysicsLayout.PPM;
+				_graphicJoint.y = _physicalJoint.GetAnchorA().y * PhysicsLayout.PPM;
+				_graphicJoint.xTo = (_physicalJoint.GetAnchorB().x - _physicalJoint.GetAnchorA().x) * PhysicsLayout.PPM;
+				_graphicJoint.yTo = (_physicalJoint.GetAnchorB().y -_physicalJoint.GetAnchorA().y) * PhysicsLayout.PPM;
+			}
 		}
 		
 		private function destroyJoint():void {
@@ -70,6 +66,7 @@ package com.flexmojo.physics.joint
 				world.DestroyJoint(_physicalJoint);
 				_physicalJoint = null;
 				target.parentApplication.removeEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
+				(target.layout as PhysicsLayout).removeEventListener(PhysicsLayout.AFTER_STEP, afterStepHandler);
 				destroyedJoint = true;
 			}
 			if(_graphicJoint != null && target != null) {

@@ -56,17 +56,13 @@ package com.flexmojo.physics.adapter
 			return fixDefs;
 		}
 		
-		private function imperturbable(pc:SkinnableComponent):Boolean {
-			return pc.getStyle("density") == 0;
-		}
-
 		protected function createBodyDef(comp:SkinnableComponent):b2BodyDef {
 			var bodyDef:b2BodyDef = new b2BodyDef();
-			bodyDef.type = imperturbable(comp) ? b2Body.b2_staticBody : b2Body.b2_dynamicBody;
+			bodyDef.type = comp.getStyle("staticBody") == true ? b2Body.b2_staticBody : b2Body.b2_dynamicBody;
 			bodyDef.position.Set(comp.x/PhysicsLayout.PPM, comp.y/PhysicsLayout.PPM);
 			bodyDef.angle = comp.rotation * Math.PI / 180;
 			bodyDef.userData = comp;
-			if(comp.getStyle("fixedRotation")) bodyDef.fixedRotation = comp.getStyle("fixedRotation");
+			if(comp.getStyle("fixedRotation") == true) bodyDef.fixedRotation = comp.getStyle("fixedRotation");
 			return bodyDef;
 		}
 
