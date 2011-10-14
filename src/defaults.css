@@ -8,8 +8,8 @@ physics|PhysicalComponent {
 	friction : 0;
 	restitution : 0;
 	density : 0;
-	staticBody: false;
 	fixedRotation : false;
+	bodyType: static;
 	
 	physicsAdapterClass : ClassReference("com.flexmojo.physics.adapter.DefaultPhysicsAdapter");
 	skinClass : ClassReference("com.flexmojo.physics.PhysicalComponentSkin");

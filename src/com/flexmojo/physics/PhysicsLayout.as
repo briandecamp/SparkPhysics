@@ -107,7 +107,8 @@ package com.flexmojo.physics
 		}        
 
 		private function imperturbable(pc:SkinnableComponent):Boolean {
-			return pc.getStyle("staticBody") == true;
+			var bodyType:* = pc.getStyle("bodyType");
+			return bodyType === undefined || bodyType == "static";
 		}
 		
 		private function detach(pc:SkinnableComponent):void {

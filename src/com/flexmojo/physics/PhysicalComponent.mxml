@@ -8,8 +8,13 @@
 		[Style(name="density",type="Number",inherit="no")]
 		[Style(name="friction",type="Number",inherit="no")]
 		[Style(name="restitution",type="Number",inherit="no")]
-		[Style(name="staticBody", type="Boolean", inherit="no")]
 		[Style(name="fixedRotation",type="Boolean",inherit="no")]
+		[Style(name="angularDamping",type="Number",inherit="no")]
+		[Style(name="linearDamping",type="Number",inherit="no")]
+		[Style(name="inertiaScale",type="Number",inherit="no")]
+		[Style(name="allowSleep",type="Boolean",inherit="no")]
+		[Style(name="bullet",type="Boolean",inherit="no")]
+		[Style(name="bodyType",type="String",inherit="no",enumeration="static,dynamic,kinematic")]
 		[Style(name="physicsAdapterClass",type="Class",inherit="no")]
 	</fx:Metadata>
 	
@@ -26,7 +31,8 @@
 			}
 			
 			public function get imperturbable():Boolean {
-				return getStyle("staticBody") == true;
+				var bodyType:* = getStyle("bodyType");
+				return bodyType === undefined || bodyType == "static";
 			}
 		]]>
 	</fx:Script>
