@@ -44,7 +44,7 @@ package com.flexmojo.physics.adapter
 				if(comp.getStyle("density")) fixtureDef.density = comp.getStyle("density");
 				if(comp.getStyle("friction")) fixtureDef.friction = comp.getStyle("friction");
 				if(comp.getStyle("restitution")) fixtureDef.restitution = comp.getStyle("restitution");
-				fixDefs[i] = fixtureDef;
+				fixDefs[i++] = fixtureDef;
 			}
 			return fixDefs;
 		}
