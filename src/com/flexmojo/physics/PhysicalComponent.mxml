@@ -46,11 +46,6 @@
 			public function get physicalBody():b2Body {
 				return _physicalBody;
 			}
-			
-			public function get imperturbable():Boolean {
-				var bodyType:* = getStyle("bodyType");
-				return bodyType === undefined || bodyType == "static";
-			}
 		]]>
 	</fx:Script>
 </s:SkinnableComponent>

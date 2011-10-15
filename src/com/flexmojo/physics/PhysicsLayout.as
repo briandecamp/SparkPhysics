@@ -123,7 +123,7 @@ package com.flexmojo.physics
 			return false;
 		}        
 
-		private function imperturbable(pc:SkinnableComponent):Boolean {
+		private function isStatic(pc:SkinnableComponent):Boolean {
 			var bodyType:* = pc.getStyle("bodyType");
 			return bodyType === undefined || bodyType == "static";
 		}
@@ -135,6 +135,9 @@ package com.flexmojo.physics
 
 				delete bodyMap[pc];
 				
+				// If we are working with IPhysicalComponent, unset the physicalBody. 
+				if(pc is IPhysicalComponent) IPhysicalComponent(pc).physicalBody = null;
+
 				pc.removeEventListener(ResizeEvent.RESIZE, onResize);
 				pc.removeEventListener(MoveEvent.MOVE, onMove);
 			}
@@ -149,8 +152,7 @@ package com.flexmojo.physics
 					body = adapter.createBody(pc, world);
 					bodyMap[pc] = body;
 					
-					// If we are working with bonefide PhysicalComponent, 
-					// set the physicalBody. PhysicalComponent should probably be an interface here.
+					// If we are working with IPhysicalComponent, set the physicalBody. 
 					if(pc is IPhysicalComponent) IPhysicalComponent(pc).physicalBody = body;
 
 					// Redraw the DebugSkin if necessary
@@ -165,15 +167,15 @@ package com.flexmojo.physics
 		}
 		
 		/*
-		 * If an imperturbable component moves, it must have
-		 * been due to the layout. Resize the fixtures.
-		 * Ignore move events for floating components.
-		 */
+		 * If a static component moves, it must have
+		 * been due to something outside the simulation. 
+		 * Reposition the fixtures.
+		*/
 		protected function onMove(event:Event):void
 		{
 			var pc:SkinnableComponent = event.target as SkinnableComponent;
 			var body:b2Body = bodyMap[pc];
-			if(body && imperturbable(pc)) {
+			if(body && isStatic(pc)) {
 				detach(pc);
 				affix(pc);
 			}
@@ -245,7 +247,7 @@ package com.flexmojo.physics
                 var pc:SkinnableComponent = nextBody.GetUserData() as SkinnableComponent;
                 if(!pc) continue;
 				
-				if(!imperturbable(pc)) {
+				if(!isStatic(pc)) {
 					pc.x = Math.round(nextBody.GetPosition().x * PPM);
 					pc.y = Math.round(nextBody.GetPosition().y * PPM);
 					pc.rotation = nextBody.GetAngle() * (180/Math.PI);
