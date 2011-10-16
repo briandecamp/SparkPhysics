@@ -32,7 +32,7 @@
 		[Style(name="allowSleep",type="Boolean",inherit="no")]
 		[Style(name="bullet",type="Boolean",inherit="no")]
 		[Style(name="bodyType",type="String",inherit="no",enumeration="static,dynamic,kinematic")]
-		[Style(name="physicsAdapterClass",type="Class",inherit="no")]
+		[Style(name="physicsFactoryClass",type="Class",inherit="no")]
 	</fx:Metadata>
 	
 	<fx:Script>

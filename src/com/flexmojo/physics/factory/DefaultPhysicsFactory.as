@@ -15,7 +15,7 @@
 * misrepresented as being the original software.
 * 3. This notice may not be removed or altered from any source distribution.
 */
-package com.flexmojo.physics.adapter
+package com.flexmojo.physics.factory
 {
 	import Box2D.Collision.Shapes.b2PolygonShape;
 	import Box2D.Collision.Shapes.b2Shape;
@@ -31,7 +31,7 @@ package com.flexmojo.physics.adapter
 	
 	import spark.components.supportClasses.SkinnableComponent;
 	
-	public class DefaultPhysicsAdapter implements IPhysicsAdapter
+	public class DefaultPhysicsFactory implements IPhysicsFactory
 	{
 		/**
 		 * Subclasses probably want to override this method. This is the trickiest part of

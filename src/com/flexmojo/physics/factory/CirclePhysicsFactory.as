@@ -15,7 +15,7 @@
 * misrepresented as being the original software.
 * 3. This notice may not be removed or altered from any source distribution.
 */
-package com.flexmojo.physics.adapter
+package com.flexmojo.physics.factory
 {
 	import Box2D.Collision.Shapes.b2CircleShape;
 	import Box2D.Collision.Shapes.b2Shape;
@@ -27,7 +27,7 @@ package com.flexmojo.physics.adapter
 	
 	import spark.components.supportClasses.SkinnableComponent;
 
-	public class CirclePhysicsAdapter extends DefaultPhysicsAdapter
+	public class CirclePhysicsFactory extends DefaultPhysicsFactory
 	{
 		override protected function createShapes(comp:SkinnableComponent):Vector.<b2Shape> {
 			var shapes:Vector.<b2Shape> = new Vector.<b2Shape>(1, true);

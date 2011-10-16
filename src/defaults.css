@@ -27,7 +27,7 @@ physics|PhysicalComponent {
 	fixedRotation : false;
 	bodyType: static;
 	
-	physicsAdapterClass : ClassReference("com.flexmojo.physics.adapter.DefaultPhysicsAdapter");
+	physicsFactoryClass : ClassReference("com.flexmojo.physics.factory.DefaultPhysicsFactory");
 	skinClass : ClassReference("com.flexmojo.physics.PhysicalComponentSkin");
 }
 

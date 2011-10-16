@@ -22,7 +22,7 @@ package com.flexmojo.physics
     import Box2D.Dynamics.b2Fixture;
     import Box2D.Dynamics.b2World;
     
-    import com.flexmojo.physics.adapter.IPhysicsAdapter;
+    import com.flexmojo.physics.factory.IPhysicsFactory;
     import com.flexmojo.physics.event.FixtureEvent;
     
     import flash.events.Event;
@@ -146,9 +146,9 @@ package com.flexmojo.physics
 		private function affix(pc:SkinnableComponent):void {
 			var body:b2Body = bodyMap[pc];
 			if(!body) {
-				var physicsAdapterClass:Class = pc.getStyle("physicsAdapterClass");
-				if(physicsAdapterClass) {
-					var adapter:IPhysicsAdapter = new physicsAdapterClass();
+				var physicsFactoryClass:Class = pc.getStyle("physicsFactoryClass");
+				if(physicsFactoryClass) {
+					var adapter:IPhysicsFactory = new physicsFactoryClass();
 					body = adapter.createBody(pc, world);
 					bodyMap[pc] = body;
 					

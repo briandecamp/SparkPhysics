@@ -23,6 +23,5 @@ package com.flexmojo.physics
 	{
 		function get physicalBody():b2Body;
 		function set physicalBody(b:b2Body):void;
-		
 	}
 }

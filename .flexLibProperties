@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <flexLibProperties includeAllClasses="true" version="3">
   <includeClasses>
-    <classEntry path="com.flexmojo.physics.adapter.IPhysicsAdapter"/>
+    <classEntry path="com.flexmojo.physics.factory.IPhysicsFactory"/>
     <classEntry path="com.flexmojo.physics.joint.Joint"/>
     <classEntry path="com.flexmojo.physics.joint.JointSkin"/>
     <classEntry path="com.flexmojo.physics.joint.MouseJointFactory"/>
@@ -9,7 +9,7 @@
     <classEntry path="com.flexmojo.physics.PhysicsLayout"/>
     <classEntry path="com.flexmojo.physics.event.FixtureEvent"/>
     <classEntry path="com.flexmojo.svg.b2SVG"/>
-    <classEntry path="com.flexmojo.physics.adapter.CirclePhysicsAdapter"/>
+    <classEntry path="com.flexmojo.physics.factory.CirclePhysicsFactory"/>
     <classEntry path="com.flexmojo.physics.IPhysicalComponent"/>
   </includeClasses>
   <includeResources>
